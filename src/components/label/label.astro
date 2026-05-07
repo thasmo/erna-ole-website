@@ -1,0 +1,18 @@
+<p data-label class="color-#aaa font-400 m-0 opacity-0 block bottom-10 pos-absolute z-1">
+	EST &mdash; MMXXVI
+</p>
+
+<script>
+	import { animate } from 'motion';
+
+	document.addEventListener('logo:start', () => {
+		animate('[data-label]', {
+			opacity: [0, 1],
+			y: [5, 0],
+		}, {
+			delay: 1.5,
+			duration: 2.5,
+			ease: [0.16, 1, 0.3, 1],
+		});
+	}, { once: true });
+</script>

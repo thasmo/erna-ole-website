@@ -1,0 +1,206 @@
+<video
+	data-logo-video
+	src="/motion.mp4"
+	preload="auto"
+	autoplay
+	loop
+	muted
+	playsinline
+	class="h-full w-full pointer-events-none inset-0 pos-fixed object-cover"
+	style="mask-image: url(#text-mask); -webkit-mask-image: url(#text-mask); mask-size: 100% 100%; -webkit-mask-size: 100% 100%; transform: translateZ(0); will-change: mask-size, -webkit-mask-size;"
+></video>
+
+<svg data-mask-svg class="h-full w-full pointer-events-none inset-0 pos-fixed" style="opacity: 0; position: absolute;">
+	<defs>
+		<mask id="text-mask">
+			<text data-mask-erna font-family="inherit" font-size="10rem" font-weight="700" fill="white" text-transform="uppercase" text-anchor="middle">ERNA</text>
+			<text data-mask-x font-family="inherit" font-size="10rem" font-weight="700" fill="white" text-transform="uppercase" text-anchor="middle">×</text>
+			<text data-mask-ole font-family="inherit" font-size="10rem" font-weight="700" fill="white" text-transform="uppercase" text-anchor="middle">OLE</text>
+		</mask>
+	</defs>
+</svg>
+
+<h1 data-logo-container class="leading-none font-700 opacity-0 flex flex-col pointer-events-none select-none uppercase pos-relative lg:inline-flex lg:flex-row lg:gap-8" style="z-index: 2; font-size: clamp(4rem, 15vw, 10rem); transform: translateZ(0); will-change: transform;">
+	<span data-logo-erna class="opacity-0 block lg:inline-block">Erna</span>
+	<span data-logo-x class="opacity-0 block lg:inline-block">×</span>
+	<span data-logo-ole class="opacity-0 block lg:inline-block">Ole</span>
+</h1>
+
+<script>
+import { animate } from 'motion';
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const INTRO_OPTIONS = { delay: 0.25, duration: 2.5, ease: [0.16, 1, 0.3, 1] as const };
+
+const erna = document.querySelector<HTMLElement>('[data-logo-erna]');
+const ole = document.querySelector<HTMLElement>('[data-logo-ole]');
+const x = document.querySelector<HTMLElement>('[data-logo-x]');
+const container = document.querySelector<HTMLElement>('[data-logo-container]');
+const video = document.querySelector<HTMLVideoElement>('[data-logo-video]');
+const maskErna = document.querySelector<SVGTextElement>('[data-mask-erna]');
+const maskX = document.querySelector<SVGTextElement>('[data-mask-x]');
+const maskOle = document.querySelector<SVGTextElement>('[data-mask-ole]');
+
+if (erna && ole && x && container && video && maskErna && maskX && maskOle) {
+	const pairs: [HTMLElement, SVGTextElement][] = [
+		[erna, maskErna],
+		[x, maskX],
+		[ole, maskOle],
+	];
+
+	let lastFontSize = '';
+	let maskTick = 0;
+
+	function syncMask() {
+		const fontSize = window.getComputedStyle(container!).fontSize;
+		const fontSizeChanged = fontSize !== lastFontSize;
+		if (fontSizeChanged)
+			lastFontSize = fontSize;
+
+		for (const [source, target] of pairs) {
+			const rect = source.getBoundingClientRect();
+			const styles = window.getComputedStyle(source);
+
+			if (fontSizeChanged)
+				target.setAttribute('font-size', fontSize);
+
+			target.setAttribute('x', String(rect.left + rect.width / 2));
+			target.setAttribute('y', String(rect.top + rect.height * 0.8));
+			target.setAttribute('opacity', styles.opacity);
+
+			if (styles.transform !== 'none') {
+				const cx = rect.left + rect.width / 2;
+				const cy = rect.top + rect.height / 2;
+				target.setAttribute('transform', `translate(${cx}, ${cy}) ${styles.transform} translate(${-cx}, ${-cy})`);
+			}
+			else {
+				target.removeAttribute('transform');
+			}
+		}
+
+		// Safari caches SVG mask sources referenced via CSS; toggling mask-size
+		// by a sub-pixel amount each frame forces re-evaluation without flicker.
+		maskTick ^= 1;
+		const size = maskTick ? '100.0001% 100%' : '100% 100%';
+		video!.style.webkitMaskSize = size;
+		video!.style.maskSize = size;
+
+		requestAnimationFrame(syncMask);
+	}
+	syncMask();
+
+	function intro(element: HTMLElement, transform: [string, string]) {
+		animate(element, { opacity: [0, 1], transform }, INTRO_OPTIONS);
+	}
+
+	const videoReady = video.readyState >= 3
+		? Promise.resolve()
+		: new Promise<void>(resolve => video.addEventListener('canplay', () => resolve(), { once: true }));
+	const fontsReady = document.fonts?.ready ?? Promise.resolve();
+
+	Promise.all([videoReady, fontsReady]).then(() => {
+		document.dispatchEvent(new CustomEvent('logo:start'));
+
+		const stacked = window.matchMedia('(max-width: 1023px)').matches;
+		intro(x!, ['scale(0.75)', 'scale(1)']);
+		if (stacked) {
+			intro(erna!, ['translateY(0.25em) scaleY(0.95)', 'translateY(0) scaleY(1)']);
+			intro(ole!, ['translateY(-0.25em) scaleY(0.95)', 'translateY(0) scaleY(1)']);
+		}
+		else {
+			intro(erna!, ['translateX(0.25em) scaleX(0.95)', 'translateX(0) scaleX(1)']);
+			intro(ole!, ['translateX(-0.25em) scaleX(0.95)', 'translateX(0) scaleX(1)']);
+		}
+
+		setTimeout(enableClickSpawn, 1000);
+	});
+
+	function enableClickSpawn() {
+		const letters = ['E', 'R', 'N', 'A', '×', 'O', 'L', 'E'];
+		let letterIndex = 0;
+		let textMask = maskErna!.parentNode as SVGMaskElement;
+		let isPointerDown = false;
+		let lastX = 0;
+		let lastY = 0;
+		let spawnDistanceSquared = 0;
+		let spawnFontSize = '';
+
+		function updateCachedSizes() {
+			const logoFontSize = Number.parseFloat(window.getComputedStyle(container!).fontSize);
+			const distance = logoFontSize * 0.65;
+			spawnDistanceSquared = distance * distance;
+			spawnFontSize = `${logoFontSize * 0.5}px`;
+		}
+
+		function spawnLetter(px: number, py: number) {
+			const text = document.createElementNS(SVG_NS, 'text');
+			text.textContent = letters[letterIndex++ % letters.length];
+			text.setAttribute('data-spawned-letter', '');
+			text.setAttribute('font-family', 'inherit');
+			text.setAttribute('font-size', spawnFontSize);
+			text.setAttribute('font-weight', '700');
+			text.setAttribute('fill', 'white');
+			text.setAttribute('text-transform', 'uppercase');
+			text.setAttribute('text-anchor', 'middle');
+			text.setAttribute('dominant-baseline', 'middle');
+			text.setAttribute('x', String(px));
+			text.setAttribute('y', String(py));
+			textMask.appendChild(text);
+		}
+
+		function pointerDown(px: number, py: number) {
+			isPointerDown = true;
+			lastX = px;
+			lastY = py;
+			updateCachedSizes();
+			spawnLetter(px, py);
+		}
+
+		function pointerMove(px: number, py: number) {
+			if (!isPointerDown)
+				return;
+			const dx = px - lastX;
+			const dy = py - lastY;
+			if (dx * dx + dy * dy >= spawnDistanceSquared) {
+				spawnLetter(px, py);
+				lastX = px;
+				lastY = py;
+			}
+		}
+
+		updateCachedSizes();
+		document.documentElement.style.setProperty('--cursor', 'crosshair');
+
+		document.addEventListener('mousedown', e => pointerDown(e.clientX, e.clientY));
+		document.addEventListener('mousemove', e => pointerMove(e.clientX, e.clientY));
+		document.addEventListener('mouseup', () => {
+			isPointerDown = false;
+		});
+
+		document.addEventListener('touchstart', (e) => {
+			e.preventDefault();
+			pointerDown(e.touches[0].clientX, e.touches[0].clientY);
+		});
+		document.addEventListener('touchmove', (e) => {
+			if (!isPointerDown)
+				return;
+			e.preventDefault();
+			pointerMove(e.touches[0].clientX, e.touches[0].clientY);
+		});
+		document.addEventListener('touchend', (e) => {
+			e.preventDefault();
+			isPointerDown = false;
+		});
+
+		document.addEventListener('keydown', (e) => {
+			if (e.key !== 'Escape')
+				return;
+			textMask.querySelectorAll('[data-spawned-letter]').forEach(letter => letter.remove());
+			letterIndex = 0;
+			const clone = textMask.cloneNode(true) as SVGMaskElement;
+			textMask.parentNode?.replaceChild(clone, textMask);
+			textMask = clone;
+		});
+	}
+}
+</script>

@@ -1,0 +1,37 @@
+---
+import Theme from './theme.astro';
+---
+<body class="text-[#c1b5b5ff] font-base flex flex-col items-center justify-center h-dvh">
+	<slot />
+	<Theme />
+</body>
+
+<script>
+	const colors = ['#ec4899', '#8b5cf6', '#f97316', '#14b8a6', '#38bdf8', '#4ade80'];
+	const randomColor = colors[Math.floor(Math.random() * colors.length)];
+	document.body.style.setProperty('--border-color', randomColor);
+
+	document.addEventListener('logo:start', () => {
+		document.body.classList.add('border-grow');
+	}, { once: true });
+</script>
+
+<style>
+	body {
+		border-color: var(--border-color);
+		border-width: 0;
+	}
+
+	body.border-grow {
+		animation: border-grow 1000ms ease-out forwards;
+	}
+
+	@keyframes border-grow {
+		from {
+			border-width: 0;
+		}
+		to {
+			border-width: 1rem;
+		}
+	}
+</style>

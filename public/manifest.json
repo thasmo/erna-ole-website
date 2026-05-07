@@ -1,0 +1,13 @@
+{
+	"$schema": "https://json.schemastore.org/web-manifest-combined.json",
+	"name": "ERNA × OLE",
+	"short_name": "ERNA × OLE",
+	"description": "digital harmony",
+	"dir": "ltr",
+	"lang": "en-US",
+	"theme_color": "#fafafa",
+	"background_color": "#fafafa",
+	"start_url": ".",
+	"display": "standalone",
+	"orientation": "portrait-primary"
+}

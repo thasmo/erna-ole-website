@@ -1,0 +1,27 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "thasmo-erna-ole-website",
+	"compatibility_date": "2026-05-01",
+	"compatibility_flags": [
+		"nodejs_compat",
+		"global_fetch_strictly_public"
+	],
+	"observability": {
+		"enabled": true,
+		"head_sampling_rate": 1
+	},
+	"assets": {
+		"binding": "ASSETS",
+		"directory": "./dist/"
+	},
+	"routes": [
+		{
+			"pattern": "erna-ole.com",
+			"custom_domain": true
+		},
+		{
+			"pattern": "www.erna-ole.com",
+			"custom_domain": true
+		}
+	]
+}
