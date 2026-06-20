@@ -15,7 +15,6 @@
 		"upload": "wrangler versions upload",
 		"prepare": "concurrently --group --prefix-colors 'auto' 'pnpm:prepare:*'",
 		"prepare:husky": "husky",
-		"prepare:wrangler": "wrangler types",
 		"lint": "concurrently --group --prefix-colors 'auto' 'pnpm:lint:*'",
 		"lint:eslint": "eslint .",
 		"lint:cspell": "cspell --no-progress --no-summary --no-must-find-files .",
@@ -25,7 +24,6 @@
 		"fix:knip": "knip --fix --no-progress --workspace ."
 	},
 	"dependencies": {
-		"@astrojs/cloudflare": "^13.0.0",
 		"@astrojs/sitemap": "^3.2.1",
 		"astro": "^6.0.0",
 		"motion": "^12.38.0"
