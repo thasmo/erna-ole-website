@@ -1,6 +1,7 @@
 name: SECURITY
 
 on:
+  workflow_call:
   merge_group:
   pull_request:
   push:
@@ -23,7 +24,7 @@ jobs:
           fetch-depth: 0
       - name: scan source
         id: trufflehog
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@bff3d2670b362bbb4a0bcdeffea146cbc2ad3abd
       - name: evaluate results
         if: steps.trufflehog.outcome == 'failure'
         run: exit 1
@@ -36,6 +37,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: scan source
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}

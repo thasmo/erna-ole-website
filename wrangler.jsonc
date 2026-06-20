@@ -11,9 +11,9 @@
 		"head_sampling_rate": 1
 	},
 	"assets": {
-		"binding": "ASSETS",
 		"directory": "./dist/"
 	},
+	"preview_urls": true,
 	"routes": [
 		{
 			"pattern": "erna-ole.com",
