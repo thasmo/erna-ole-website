@@ -2,7 +2,7 @@
 	"name": "@thasmo/erna-ole-website",
 	"type": "module",
 	"private": true,
-	"packageManager": "pnpm@10.34.4",
+	"packageManager": "pnpm@11.9.0",
 	"engines": {
 		"node": ">=22",
 		"pnpm": ">=10"
