@@ -25,7 +25,7 @@
 	},
 	"dependencies": {
 		"@astrojs/sitemap": "^3.2.1",
-		"astro": "^6.0.0",
+		"astro": "^7.0.0",
 		"motion": "^12.38.0"
 	},
 	"devDependencies": {
