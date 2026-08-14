@@ -28,6 +28,7 @@
 
 <script>
 import { animate } from 'motion';
+import { createLogoSound } from './sound';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const INTRO_OPTIONS = { delay: 0.25, duration: 2.5, ease: [0.16, 1, 0.3, 1] as const };
@@ -117,6 +118,7 @@ if (erna && ole && x && container && video && maskErna && maskX && maskOle) {
 
 	function enableClickSpawn() {
 		const letters = ['E', 'R', 'N', 'A', '×', 'O', 'L', 'E'];
+		const sound = createLogoSound();
 		let letterIndex = 0;
 		let textMask = maskErna!.parentNode as SVGMaskElement;
 		let isPointerDown = false;
@@ -146,6 +148,7 @@ if (erna && ole && x && container && video && maskErna && maskX && maskOle) {
 			text.setAttribute('x', String(px));
 			text.setAttribute('y', String(py));
 			textMask.appendChild(text);
+			sound.playNote(px, py);
 		}
 
 		function pointerDown(px: number, py: number) {
@@ -197,6 +200,7 @@ if (erna && ole && x && container && video && maskErna && maskX && maskOle) {
 				return;
 			textMask.querySelectorAll('[data-spawned-letter]').forEach(letter => letter.remove());
 			letterIndex = 0;
+			sound.reset();
 			const clone = textMask.cloneNode(true) as SVGMaskElement;
 			textMask.parentNode?.replaceChild(clone, textMask);
 			textMask = clone;
