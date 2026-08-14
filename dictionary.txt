@@ -14,3 +14,4 @@ panchang
 csvg
 cfilter
 crect
+harmonicity

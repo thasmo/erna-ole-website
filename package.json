@@ -26,7 +26,8 @@
 	"dependencies": {
 		"@astrojs/sitemap": "^3.2.1",
 		"astro": "^7.0.0",
-		"motion": "^13.0.0"
+		"motion": "^13.0.0",
+		"tone": "^15.1.22"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^21.0.0",
