@@ -7,13 +7,13 @@ import Theme from './theme.astro';
 </body>
 
 <script>
+	import { onLogoStart } from './logo/animation';
+
 	const colors = ['#ec4899', '#8b5cf6', '#f97316', '#14b8a6', '#38bdf8', '#4ade80'];
 	const randomColor = colors[Math.floor(Math.random() * colors.length)];
 	document.body.style.setProperty('--border-color', randomColor);
 
-	document.addEventListener('logo:start', () => {
-		document.body.classList.add('border-grow');
-	}, { once: true });
+	onLogoStart(() => document.body.classList.add('border-grow'));
 </script>
 
 <style>

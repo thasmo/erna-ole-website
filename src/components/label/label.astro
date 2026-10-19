@@ -4,15 +4,16 @@
 
 <script>
 	import { animate } from 'motion';
+	import { EASE, onLogoStart } from '../logo/animation';
 
-	document.addEventListener('logo:start', () => {
+	onLogoStart(() => {
 		animate('[data-label]', {
 			opacity: [0, 1],
 			y: [5, 0],
 		}, {
 			delay: 1.5,
 			duration: 2.5,
-			ease: [0.16, 1, 0.3, 1],
+			ease: EASE,
 		});
-	}, { once: true });
+	});
 </script>
