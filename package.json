@@ -11,10 +11,11 @@
 		"dev": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
-		"deploy": "wrangler deploy",
-		"upload": "wrangler versions upload",
+		"deploy": "void deploy --platform cloudflare",
+		"upload": "wrangler versions upload --config dist/client/wrangler.json",
 		"prepare": "concurrently --group --prefix-colors 'auto' 'pnpm:prepare:*'",
-		"prepare:husky": "husky",
+		"prepare:hooks": "vp config --no-agent",
+		"prepare:astro": "astro sync",
 		"lint": "concurrently --group --prefix-colors 'auto' 'pnpm:lint:*'",
 		"lint:eslint": "eslint .",
 		"lint:cspell": "cspell --no-progress --no-summary --no-must-find-files .",
@@ -24,6 +25,7 @@
 		"fix:knip": "knip --fix --no-progress --workspace ."
 	},
 	"dependencies": {
+		"@astrojs/cloudflare": "^14.4.2",
 		"@astrojs/sitemap": "^3.2.1",
 		"astro": "^7.0.0",
 		"motion": "^14.0.0",
@@ -42,11 +44,11 @@
 		"concurrently": "^10.0.0",
 		"cspell": "^10.0.0",
 		"eslint": "^10.0.0",
-		"husky": "^9.1.7",
 		"knip": "^6.0.0",
-		"lint-staged": "^17.0.0",
 		"typescript": "^6.0.0",
 		"unocss": "^66.5.12",
-		"wrangler": "^4.54.0"
+		"vite-plus": "1.4.0",
+		"void": "^1.4.0",
+		"wrangler": "^4.155.0"
 	}
 }
