@@ -24,6 +24,7 @@ export default defineConfig({
 				custom_domain: true,
 			},
 		],
+		workers_dev: false,
 	},
 	inference: {
 		appType: 'static',
