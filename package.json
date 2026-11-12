@@ -47,7 +47,7 @@
 		"knip": "^6.0.0",
 		"typescript": "^6.0.0",
 		"unocss": "^66.5.12",
-		"vite-plus": "1.5.1",
+		"vite-plus": "1.6.0",
 		"void": "^1.4.0",
 		"wrangler": "^4.155.0"
 	}
