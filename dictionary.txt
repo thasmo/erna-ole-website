@@ -17,3 +17,4 @@ crect
 harmonicity
 fatsawtooth
 voidzero
+tsrs
