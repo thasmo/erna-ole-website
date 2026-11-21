@@ -4,7 +4,7 @@ export interface Glyph {
 	x: number;
 	y: number;
 	opacity: number;
-	transform?: DOMMatrix;
+	transform?: DOMMatrix | undefined;
 }
 
 export interface Border {
