@@ -41,7 +41,12 @@ export function createLogoSound() {
 		voice: Tone.Synth,
 		options: {
 			oscillator: { type: 'fatsawtooth', count: 2, spread: 20 },
-			envelope: { attack: 0.005, decay: 0.2, sustain: 0, release: 0.3 },
+			envelope: {
+				attack: 0.005,
+				decay: 0.2,
+				sustain: 0,
+				release: 0.3,
+			},
 		},
 	}).connect(panner);
 	synth.volume.value = MASTER_VOLUME_DB;

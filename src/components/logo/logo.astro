@@ -36,7 +36,9 @@ if (container && video && canvas) {
 	const parts = [...container.children] as HTMLElement[];
 	const [erna, x, ole] = parts as [HTMLElement, HTMLElement, HTMLElement];
 	const { backgroundColor } = window.getComputedStyle(document.documentElement);
-	const stencil = createStencil(canvas, backgroundColor === 'rgba(0, 0, 0, 0)' ? '#fff' : backgroundColor);
+	const stencil = createStencil(canvas, backgroundColor === 'rgba(0, 0, 0, 0)'
+		? '#fff'
+		: backgroundColor);
 
 	const letters: Glyph[] = [];
 	let logo: Glyph[] = [];
@@ -73,12 +75,19 @@ if (container && video && canvas) {
 		const bodyStyles = window.getComputedStyle(document.body);
 		const borderWidth = Number.parseFloat(bodyStyles.borderTopWidth);
 		border = borderWidth > 0
-			? { rect: document.body.getBoundingClientRect(), width: borderWidth, color: bodyStyles.borderTopColor }
+			? {
+					rect: document.body.getBoundingClientRect(),
+					width: borderWidth,
+					color: bodyStyles.borderTopColor,
+				}
 			: undefined;
 	}
 
 	function paint() {
-		stencil.paint([...logo, ...letters], border);
+		stencil.paint([
+			...logo,
+			...letters,
+		], border);
 	}
 
 	// Follows the intro animations frame by frame; afterwards the logo is static.
@@ -100,7 +109,10 @@ if (container && video && canvas) {
 	});
 
 	function intro(element: HTMLElement, transform: [string, string]) {
-		return animate(element, { opacity: [0, 1], transform }, INTRO_OPTIONS).finished;
+		return animate(element, {
+			opacity: [0, 1],
+			transform,
+		}, INTRO_OPTIONS).finished;
 	}
 
 	const videoReady = video.readyState >= 3
@@ -111,7 +123,9 @@ if (container && video && canvas) {
 	Promise.all([videoReady, fontsReady]).then(() => {
 		startLogo();
 
-		const axis = window.matchMedia('(max-width: 1023px)').matches ? 'Y' : 'X';
+		const axis = window.matchMedia('(max-width: 1023px)').matches
+			? 'Y'
+			: 'X';
 		const slide = (offset: string): [string, string] => [
 			`translate${axis}(${offset}) scale${axis}(0.95)`,
 			`translate${axis}(0) scale${axis}(1)`,
@@ -136,7 +150,13 @@ if (container && video && canvas) {
 			const font = `700 ${fontSize * 0.5}px ${fontFamily}`;
 			// Centers the letter on the pointer like SVG `dominant-baseline: middle`.
 			const y = py + stencil.xHeight(font) / 2;
-			letters.push({ text: SPAWN_TEXTS[letters.length % SPAWN_TEXTS.length]!, font, x: px, y, opacity: 1 });
+			letters.push({
+				text: SPAWN_TEXTS[letters.length % SPAWN_TEXTS.length]!,
+				font,
+				x: px,
+				y,
+				opacity: 1,
+			});
 			last = { x: px, y: py };
 			paint();
 			sound.playNote(px, py);
